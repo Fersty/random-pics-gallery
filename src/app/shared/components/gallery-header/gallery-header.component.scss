@@ -1,11 +1,9 @@
-@use "../../../../styles/theme" as *;
-
 :host {
   .gallery_header_container {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
     padding: 16px 32px;
-    background: $header-background;
+    background: #f5f5f5;
   }
 }

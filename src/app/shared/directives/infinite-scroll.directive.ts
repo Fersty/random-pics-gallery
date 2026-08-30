@@ -21,6 +21,4 @@ export class InfiniteScrollDirective {
       this.scrolledDown.emit();
     }
   }
-
-  constructor() {}
 }
