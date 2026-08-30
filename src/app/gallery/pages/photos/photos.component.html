@@ -1,0 +1,15 @@
+@if (photo(); as photo) {
+  <div class="photo_page_container">
+    <div class="img_container">
+      <img [src]="photo.url" [alt]="photo.id" />
+    </div>
+    @let isFavorited = isPhotoFavorited();
+    <button
+      [matButton]="isFavorited ? 'filled' : 'outlined'"
+      color="primary"
+      (click)="isFavorited ? deleteFromFavorite() : addToFavorite()"
+    >
+      {{ isFavorited ? "Delete from Favorites" : "Add to Favorites" }}
+    </button>
+  </div>
+}

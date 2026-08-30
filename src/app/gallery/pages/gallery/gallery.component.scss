@@ -1,0 +1,22 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .gallery_container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+    padding: 16px 32px;
+    place-items: center;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    box-sizing: border-box;
+
+    mat-progress-spinner {
+      grid-column: 1 / -1;
+      margin: 16px auto;
+    }
+  }
+}

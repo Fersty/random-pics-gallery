@@ -1,0 +1,41 @@
+@use '@angular/material' as mat;
+@use 'styles/theme';
+
+html {
+  color-scheme: light;
+  @include mat.theme(
+    (
+      color: mat.$azure-palette,
+      typography: Roboto,
+      density: 0,
+    )
+  );
+
+  @include mat.snack-bar-overrides(
+    (
+      container-color: var(--mat-sys-inverse-surface),
+      supporting-text-color: var(--mat-sys-inverse-on-surface),
+    )
+  );
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+app-root > router-outlet + * {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: block;
+  overflow: hidden;
+}

@@ -1,0 +1,21 @@
+<div class="gallery_header_container">
+  <button
+    [matButton]="photosLink.isActive ? 'filled' : 'outlined'"
+    color="primary"
+    [routerLink]="'/'"
+    routerLinkActive
+    #photosLink="routerLinkActive"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    Photos
+  </button>
+  <button
+    [matButton]="favoritesLink.isActive ? 'filled' : 'outlined'"
+    color="primary"
+    [routerLink]="'/favorites'"
+    routerLinkActive
+    #favoritesLink="routerLinkActive"
+  >
+    Favorites
+  </button>
+</div>

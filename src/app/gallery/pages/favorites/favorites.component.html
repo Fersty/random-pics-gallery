@@ -1,0 +1,12 @@
+@if (favoritePhotos().length > 0) {
+  <div class="favorites_photos_container">
+    @for (photo of favoritePhotos(); track photo.id) {
+      <app-photo-thumbnail
+        [photo]="photo"
+        (photoClick)="openPhoto($event)"
+      ></app-photo-thumbnail>
+    }
+  </div>
+} @else {
+  <span class="no_favorites">No favorite photos yet.</span>
+}
