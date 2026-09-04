@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { PhotosPageComponent } from './photos.component';
-import { GalleryModule } from '../../gallery.module';
 import { GalleryRequestsService } from '../../../services/gallery-requests.service';
 import { FavoritesService } from '../../../services/favorites.service';
 import { Photo } from '../../../interfaces/photo.interface';
@@ -17,7 +16,7 @@ function createComponent(id: string | null, photo: Photo, isFavorited: boolean) 
   };
 
   TestBed.configureTestingModule({
-    imports: [GalleryModule],
+    imports: [PhotosPageComponent],
     providers: [
       { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => id } } } },
       { provide: Router, useValue: router },

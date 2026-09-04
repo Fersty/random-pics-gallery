@@ -1,33 +1,40 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   OnInit,
+  inject,
   signal,
-  ViewChild,
 } from '@angular/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { GalleryRequestsService } from '../../../services/gallery-requests.service';
 import { Photo } from '../../../interfaces/photo.interface';
 import { FavoritesService } from '../../../services/favorites.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { PhotoThumbnailComponent } from '../../../shared/components/photo-thumbnail/photo-thumbnail.component';
+import { InfiniteScrollDirective } from '../../../shared/directives/infinite-scroll.directive';
+
+const PAGE_SIZE = 20;
+const SNACKBAR_DURATION_MS = 1000;
 
 @Component({
   selector: 'app-gallery-page',
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [
+    PhotoThumbnailComponent,
+    MatProgressSpinnerModule,
+    InfiniteScrollDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GalleryPageComponent implements OnInit {
-  @ViewChild('galleryContainer') galleryContainer!: ElementRef<HTMLDivElement>;
+  private readonly galleryRequestsService = inject(GalleryRequestsService);
+  private readonly favoritesService = inject(FavoritesService);
+  private readonly snackBar = inject(MatSnackBar);
+
   photos = signal<Photo[]>([]);
   loading = signal(false);
-
-  constructor(
-    private galleryRequestsService: GalleryRequestsService,
-    private favoritesService: FavoritesService,
-    private snackBar: MatSnackBar,
-  ) {}
 
   ngOnInit(): void {
     this.loadRandomPhotos();
@@ -37,21 +44,17 @@ export class GalleryPageComponent implements OnInit {
     if (this.loading()) {
       return;
     }
-    this.loading.set(true);
-    setTimeout(() => this.scrollToBottom());
-    this.galleryRequestsService.loadPhotos(20).subscribe({
-      next: (photos) => {
-        this.photos.update((current) => [...current, ...photos]);
-        this.loading.set(false);
-      },
-    });
-  }
 
-  private scrollToBottom(): void {
-    const el = this.galleryContainer?.nativeElement;
-    if (el) {
-      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
-    }
+    this.loading.set(true);
+    this.galleryRequestsService
+      .loadPhotos(PAGE_SIZE)
+      .subscribe({
+        next: (photos) => {
+          this.photos.update((current) => [...current, ...photos]);
+        },
+        complete: () => this.loading.set(false),
+        error: () => this.loading.set(false),
+      });
   }
 
   addToFavorites = (photoId: string) => {
@@ -61,7 +64,7 @@ export class GalleryPageComponent implements OnInit {
         ? 'Photo added to favorites'
         : 'Photo already exists in favorites',
       '',
-      { duration: 1000 },
+      { duration: SNACKBAR_DURATION_MS },
     );
   };
 }

@@ -1,24 +1,44 @@
-import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  EventEmitter,
+  OnDestroy,
+  Output,
+  inject,
+} from '@angular/core';
 
 @Directive({
   selector: '[infiniteScroll]',
-  standalone: false,
+  standalone: true,
 })
-export class InfiniteScrollDirective {
-  public prevScrollTop = 0;
+export class InfiniteScrollDirective implements OnDestroy {
+  private readonly elementRef = inject(ElementRef<HTMLElement>);
 
-  @Output() scrolledDown: EventEmitter<void> = new EventEmitter<void>();
+  @Output() scrolledDown = new EventEmitter<void>();
 
-  @HostListener('scroll', ['$event']) scrolling(e: Event) {
-    const target = e.target as HTMLElement;
-    const { offsetHeight, scrollTop, scrollHeight } = target;
-    if (
-      scrollTop - this.prevScrollTop > 10 &&
-      scrollTop > 0 &&
-      Math.trunc(scrollHeight - scrollTop) <= offsetHeight + 1
-    ) {
-      this.prevScrollTop = scrollTop;
-      this.scrolledDown.emit();
-    }
+  private observer?: IntersectionObserver;
+
+  constructor() {
+    const element = this.elementRef.nativeElement;
+
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry?.isIntersecting) {
+          this.scrolledDown.emit();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '200px 0px',
+        threshold: 0.1,
+      },
+    );
+
+    this.observer.observe(element);
+  }
+
+  ngOnDestroy(): void {
+    this.observer?.disconnect();
   }
 }

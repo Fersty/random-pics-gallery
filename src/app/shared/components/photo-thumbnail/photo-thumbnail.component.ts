@@ -11,7 +11,7 @@ import { Photo } from '../../../interfaces/photo.interface';
   selector: 'app-photo-thumbnail',
   templateUrl: './photo-thumbnail.component.html',
   styleUrls: ['./photo-thumbnail.component.scss'],
-  standalone: false,
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhotoThumbnailComponent {

@@ -1,6 +1,8 @@
-@if (favoritePhotos().length > 0) {
+@let photos = (favoritePhotos$ | async) ?? [];
+
+@if (photos.length > 0) {
   <div class="favorites_photos_container">
-    @for (photo of favoritePhotos(); track photo.id) {
+    @for (photo of photos; track photo.id) {
       <app-photo-thumbnail
         [photo]="photo"
         (photoClick)="openPhoto($event)"

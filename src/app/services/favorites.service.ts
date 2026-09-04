@@ -1,17 +1,21 @@
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { Photo } from '../interfaces/photo.interface';
+import { FAVORITES_STORAGE_KEY } from '../constants/storage-keys';
 import { GalleryRequestsService } from './gallery-requests.service';
+import { StorageService } from './storage.service';
 
-const STORAGE_KEY = 'favorites';
-
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class FavoritesService {
-  constructor(private galleryRequestsService: GalleryRequestsService) {}
+  constructor(
+    private galleryRequestsService: GalleryRequestsService,
+    private storageService: StorageService,
+  ) {}
 
   private getFavoriteIds(): string[] {
-    const ids = window.localStorage.getItem(STORAGE_KEY);
-    return ids ? JSON.parse(ids) : [];
+    return this.storageService.read<string[]>(FAVORITES_STORAGE_KEY) ?? [];
   }
 
   isFavorited(photoId: string): boolean {
@@ -36,12 +40,12 @@ export class FavoritesService {
       return false;
     }
     ids.push(photoId);
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+    this.storageService.write(FAVORITES_STORAGE_KEY, ids);
     return true;
   }
 
   removeFromFavorites(photoId: string): void {
     const updatedIds = this.getFavoriteIds().filter((id) => id !== photoId);
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedIds));
+    this.storageService.write(FAVORITES_STORAGE_KEY, updatedIds);
   }
 }

@@ -1,16 +1,19 @@
-<div
-  #galleryContainer
-  class="gallery_container"
-  infiniteScroll
-  (scrolledDown)="loadRandomPhotos()"
->
+<div class="gallery_container">
   @for (photo of photos(); track photo.id) {
     <app-photo-thumbnail
       [photo]="photo"
       (photoClick)="addToFavorites($event)"
     ></app-photo-thumbnail>
   }
-  @if (loading()) {
-    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-  }
+
+  <div
+    class="gallery_loader"
+    infiniteScroll
+    (scrolledDown)="loadRandomPhotos()"
+    aria-live="polite"
+  >
+    @if (loading()) {
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    }
+  </div>
 </div>

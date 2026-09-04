@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
 import { GalleryPageComponent } from './gallery.component';
-import { GalleryModule } from '../../gallery.module';
 import { GalleryRequestsService } from '../../../services/gallery-requests.service';
 import { FavoritesService } from '../../../services/favorites.service';
 import { Photo } from '../../../interfaces/photo.interface';
@@ -15,7 +14,7 @@ function createComponent(photosToLoad: Photo[], addToFavoritesReturns = true) {
   const snackBar = { open: vi.fn() };
 
   TestBed.configureTestingModule({
-    imports: [GalleryModule],
+    imports: [GalleryPageComponent],
     providers: [
       { provide: GalleryRequestsService, useValue: galleryRequestsService },
       { provide: FavoritesService, useValue: favoritesService },
@@ -23,8 +22,7 @@ function createComponent(photosToLoad: Photo[], addToFavoritesReturns = true) {
     ],
   });
 
-  const component =
-    TestBed.createComponent(GalleryPageComponent).componentInstance;
+  const component = TestBed.createComponent(GalleryPageComponent).componentInstance;
   return { component, galleryRequestsService, favoritesService, snackBar };
 }
 
